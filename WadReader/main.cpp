@@ -52,9 +52,9 @@ public:
 	char size[4];
 	char name[8];
 
-	void dirRead(fstream& wadFile, char dirPos[4])
+	void dirRead(fstream& wadFile,int dirPos)
 	{
-
+		wadFile.seekg(dirPos);
 	}
 };
 
@@ -75,6 +75,8 @@ public:
 			<< hex << showbase << headerInfo.dir;
 
 		dirs = new WadDir[headerInfo.lumpc];
+
+
 	}
 	~Wad()
 	{
