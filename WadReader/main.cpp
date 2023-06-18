@@ -48,13 +48,20 @@ public:
 class WadDir
 {
 public:
-	char filepos[4];
-	char size[4];
+	unsigned int lumpPos;
+	unsigned int size;
 	char name[8];
 
 	void dirRead(fstream& wadFile,int dirPos)
 	{
 		wadFile.seekg(dirPos);
+		wadFile.read(reinterpret_cast<char*>(&lumpPos), 4);
+		wadFile.seekg(wadFile.tellg() + streampos(4));
+		wadFile.read(reinterpret_cast<char*>(&size), 4);
+		wadFile.seekg(wadFile.tellg() + streampos(4));
+		wadFile.read(name, 8);
+		wadFile.seekg(wadFile.tellg() + streampos(8));
+
 	}
 };
 
