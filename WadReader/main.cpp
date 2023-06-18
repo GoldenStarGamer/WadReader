@@ -60,7 +60,6 @@ public:
 		wadFile.read(reinterpret_cast<char*>(&size), 4);
 		wadFile.seekg(wadFile.tellg() + streampos(4));
 		wadFile.read(name, 8);
-		wadFile.seekg(wadFile.tellg() + streampos(8));
 
 	}
 };
@@ -83,7 +82,11 @@ public:
 
 		dirs = new WadDir[headerInfo.lumpc];
 
-
+		for (int i = 1; i <= headerInfo.lumpc; i++)
+		{
+			dirs[i - 1].dirRead(wadFile, headerInfo.dir + (16 * i));
+			cout << dirs[i - 1].name << endl << dirs[i - 1].size << endl;
+		}
 	}
 	~Wad()
 	{
