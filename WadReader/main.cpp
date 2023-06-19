@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <stdexcept>
+#include <string>
 
 using namespace std;
 
@@ -34,7 +35,7 @@ public:
 		else
 		{
 			cout << "Invalid wad byte: " << hex << showbase << static_cast<int>(x[0]) << endl;
-			throw runtime_error("not a valid wad");
+			throw runtime_error("Invalid Wad");
 		}
 		wadFile.seekg(4);
 		wadFile.read(reinterpret_cast<char*>(&y), 4);
@@ -83,12 +84,25 @@ public:
 
 		if (!wadFile.is_open())
 		{
-			throw runtime_error("file open failure");
+			throw runtime_error("Unable to Open File");
 		}
 		headerInfo.headerRead(wadFile);
-		cout << headerInfo.wadType << endl
-			<< headerInfo.lumpc << endl
-			<< hex << showbase << headerInfo.dir;
+		cout << endl << "Type: ";
+		switch (headerInfo.wadType)
+		{
+		case 0:
+			cout << "IWAD";
+			break;
+		case 1:
+			cout << "PWAD";
+			break;
+		default:
+			cout << headerInfo.wadType;
+			break;
+		}
+		cout << endl
+			<< "Number of Lumps: " << headerInfo.lumpc << endl
+			<< "Directory Location: " << hex << showbase << headerInfo.dir << endl << endl;
 
 		dirs = new WadDir[headerInfo.lumpc];
 
@@ -118,14 +132,20 @@ int main(int argc, char* argv[])
 {
 	try
 	{
+		string wadPath;
+
 		if (argc == 2)
 		{
-		Wad wad(argv[1]);
+			wadPath = argv[1];
 		}
 		else
 		{
-			throw runtime_error("Invalid number of arguments");
+			cout << "Wad Location: ";
+			getline(cin, wadPath);
+			wadPath.erase(remove(wadPath.begin(), wadPath.end(), '"'), wadPath.end());
 		}
+
+		Wad wad(wadPath);
 	}
 	catch (const std::exception& e)
 	{
